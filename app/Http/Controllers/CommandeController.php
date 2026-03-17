@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Commande;
 use App\Http\Requests\StoreCommandeRequest;
 use App\Http\Requests\UpdateCommandeRequest;
+use Illuminate\Auth\Events\Validated;
 
 class CommandeController extends Controller
 {
@@ -29,7 +30,16 @@ class CommandeController extends Controller
      */
     public function store(StoreCommandeRequest $request)
     {
-        
+          $commande = Commande::create([
+            'statut' => $request->statut,
+            'adresse_livraison' => $request->adresse_livraison,
+            'user_id' => auth('api')->id()
+          ]);
+
+          return response()->json([
+              'message' => 'commande a été crée',
+             'commande' => $commande
+            ], 201);
     }
 
     /**

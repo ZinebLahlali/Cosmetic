@@ -12,7 +12,8 @@ class StoreCommandeRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        $user = auth('api')->user();
+        return $user && $user->loadMissing('role')->role?->name === "Client";
     }
 
     /**
@@ -23,7 +24,8 @@ class StoreCommandeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+             'statut' => 'required|string',
+            'adresse_livraison' => 'required|string',
         ];
     }
 }
