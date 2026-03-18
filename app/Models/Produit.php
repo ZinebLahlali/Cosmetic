@@ -29,8 +29,8 @@ class Produit extends Model
         return $this->hasMany(ImageProduit::class);
     }
 
-    public function commandes(): HasMany
+    public function commandes()
     {
-        return $this->hasMany(Commande::class);
+        return $this->belongsToMany(Commande::class,'produit_commandes','produit_id','commande_id')->withPivot('quantite');
     }
 }

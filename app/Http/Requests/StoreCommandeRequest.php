@@ -24,8 +24,11 @@ class StoreCommandeRequest extends FormRequest
     public function rules(): array
     {
         return [
-             'statut' => 'required|string',
-            'adresse_livraison' => 'required|string',
+            // par defaut pending
+            //  'statut' => 'required|string', 
+            'adresse_livraison' => 'required|string|min:10',
+            'produit_id' => 'required|integer|exists:produits,id',
+            'quantite' => 'required|integer|min:1',
         ];
     }
 }

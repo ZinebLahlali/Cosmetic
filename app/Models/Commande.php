@@ -17,9 +17,9 @@ class Commande extends Model
         'user_id',
     ];
 
-    public function produits(): HasMany
+    public function produits()
     {
-        return $this->hasMany(Produit::class);
+        return $this->belongsToMany(Produit::class,'produit_commandes','commande_id','produit_id')->withPivot('quantite');
     }
 
     public function user(): BelongsTo

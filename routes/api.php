@@ -16,3 +16,4 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/user/{id}', [AuthController::class, 'getUsers']);
 
 Route::post('/commande/creation', [CommandeController::class, 'store']);
+Route::get('/mes_Commandes', [CommandeController::class, 'showMyCommandes'])->middleware('check.user');

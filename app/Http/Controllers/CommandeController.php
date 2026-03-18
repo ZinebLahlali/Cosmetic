@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Commande;
 use App\Http\Requests\StoreCommandeRequest;
 use App\Http\Requests\UpdateCommandeRequest;
+use App\Models\ProduitCommande;
 use Illuminate\Auth\Events\Validated;
+use Illuminate\Support\Facades\DB;
 
 class CommandeController extends Controller
 {
@@ -31,23 +33,41 @@ class CommandeController extends Controller
     public function store(StoreCommandeRequest $request)
     {
           $commande = Commande::create([
-            'statut' => $request->statut,
+            'statut' => 'pending',
             'adresse_livraison' => $request->adresse_livraison,
             'user_id' => auth('api')->id()
           ]);
 
+          ProduitCommande::create([
+             'produit_id' => $request->produit_id,
+             'commande_id' => $commande->id,
+             'quantite' => $request->quantite
+          ]);
+
           return response()->json([
               'message' => 'commande a été crée',
-             'commande' => $commande
+             'produits' => $commande->produits,
             ], 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Commande $commande)
+    public function showMyCommandes()
     {
-        //
+        $user = auth('api')->user();
+
+        $commandes = DB::table('users')
+        ->join('commandes', 'commandes.user_id', '=', 'users.id')
+        ->join('produit_commandes', 'commandes.id', '=', 'produit_commandes.commande_id')
+        ->join('produits', 'produits.id', '=', 'produit_commandes.produit_id')
+        ->select('users.name as nom','commandes.*', 'produit_commandes.produit_id', 'produit_commandes.quantite', 'produits.name')
+        ->where('users.id', $user->id)
+        ->get();
+
+        return response()->json([
+            'commandes' => $commandes
+        ]);
     }
 
     /**

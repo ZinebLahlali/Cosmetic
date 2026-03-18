@@ -11,4 +11,7 @@ class ProduitCommande extends Model
         'produit_id',
         'commande_id',
     ];
+
+
+    
 }
