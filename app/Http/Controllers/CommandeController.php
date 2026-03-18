@@ -81,9 +81,24 @@ class CommandeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCommandeRequest $request, Commande $commande)
-    {
-        //
+    public function update(UpdateCommandeRequest $request, $id)
+    {    
+        
+        $user = auth('api')->user();
+        $commandes = DB::table('commandes')
+        ->where('id', $id)
+        ->where('user_id', $user->id)
+        ->update($request->validated());
+
+        if(!$commandes){
+            return response()->json([
+            "message" => "La commande n'a pas trouvé "
+        ]);
+        }
+
+        return response()->json([
+            "message" => "La commande a été annulé"
+        ]);
     }
 
     /**
