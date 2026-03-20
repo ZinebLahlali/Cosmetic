@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class CheckUser
+class AdminMiddleware
 {
     /**
      * Handle an incoming request.
@@ -14,11 +14,15 @@ class CheckUser
      * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
-    {     
-        if(!auth('api')->check()){
-            return response()->json(['message' => 'Non autorisé'], 401);
-        }
+    {     $user = auth('api')->user();
 
-       return $next($request);
+         $user->load('role');
+        if(!$user->role || $user->role->name !== 'Admin'){
+            return response()->json([
+                'message' => 'Accés réservé aux admins'
+            ], 403);
+        }
+        
+        return $next($request);
     }
 }

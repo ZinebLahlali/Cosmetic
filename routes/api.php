@@ -18,4 +18,5 @@ Route::get('/user/{id}', [AuthController::class, 'getUsers']);
 Route::post('/commande/creation', [CommandeController::class, 'store']);
 Route::get('/mes_Commandes', [CommandeController::class, 'showMyCommandes'])->middleware('check.user');
 Route::put('/commande/{id}/cancel', [CommandeController::class, 'update'])->middleware('check.user');
-Route::put('/orders/{id}/prepare', [CommandeController::class, 'updateStatut'])->middleware('check.user');
+Route::put('/orders/{id}/prepare', [CommandeController::class, 'updateStatut'])->middleware('check.employe');
+Route::get('/admin/dashboard', [CommandeController::class, 'adminStats'])->middleware('check.admin');

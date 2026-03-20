@@ -142,4 +142,26 @@ class CommandeController extends Controller
     {
         //
     }
+
+   public function  adminStats()
+   {
+
+     $pending = Commande::where('statut', 'pending')->count();
+     $en_preparation = Commande::where('statut', 'en_preparation')->count();
+     $cancel = Commande::where('statut', 'cancel')->count();
+     
+      $data = Commande::with(['user','produits'])->latest()->take(10)->get();
+
+     return response()->json([
+        'pending' => $pending,
+        'en_preparation' => $en_preparation,
+        'cancel' => $cancel,
+        'data' => $data
+     ]);
+
+     
+
+     
+  }
+
 }
