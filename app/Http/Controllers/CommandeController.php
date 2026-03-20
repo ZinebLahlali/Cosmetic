@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Commande;
 use App\Http\Requests\StoreCommandeRequest;
 use App\Http\Requests\UpdateCommandeRequest;
+// use App\Http\Requests\UpdateStatutCommandeRequest;
+use Illuminate\Http\Request;
 use App\Models\ProduitCommande;
 use Illuminate\Auth\Events\Validated;
 use Illuminate\Support\Facades\DB;
@@ -99,6 +101,38 @@ class CommandeController extends Controller
         return response()->json([
             "message" => "La commande a été annulé"
         ]);
+    }
+
+
+
+    public function updateStatut(Request $request, $id)
+    {    
+        $orders = Commande::FindOrFail($id);
+
+           if (!$request->statut) {
+        return response()->json([
+            'message' => 'statut obligatoire'
+        ], 400);
+    }
+
+         if($orders->statut == "pending"){
+                $orders->update([
+            'statut' => $request->statut,
+           ]);
+            return response()->json([
+            'message' => 'Statut mise à jour'
+        ]);
+         }
+         if($orders->statut == "cancel"){
+            return response()->json([
+                'message' => 'La commande a déjà été annulée'
+            ]);
+         }
+           
+       
+     
+
+       
     }
 
     /**

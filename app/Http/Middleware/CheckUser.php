@@ -15,8 +15,16 @@ class CheckUser
      */
     public function handle(Request $request, Closure $next): Response
     {     
-        if(!auth('api')->check()){
-            return response()->json(['message' => 'Non autorisé'], 401);
+        // if(!auth('api')->check()){
+        //     return response()->json(['message' => 'Non autorisé'], 401);
+        // }
+
+        $user = auth('api')->user();
+
+        if(!$user->load('role')->role || $user->role->name   !== "Employe"){
+           return response()->json([
+             'message' => 'Accés réservé aux employés'
+           ], 403);
         }
         
     
